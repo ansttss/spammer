@@ -4,34 +4,35 @@ let User = require('../models/user');
 
 let nodemailer = require('nodemailer').createTransport({
     host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false,
     auth: {
-        type: 'OAuth2',
         user: process.env.EMAIL,
-        clientId: '773320748944-mro3okvavk7uj2qd85cooiv54c92qgku.apps.googleusercontent.com',
-        clientSecret: 'fYJmGH3ztjV8H76aabzSU7DA',
-        refreshToken: '1//040TuQWkuSiZeCgYIARAAGAQSNwF-L9IrQD5Caf5kDnsWqFYplvpMhio1pqY26wycFetjbkv7PsAPz5bYuLKhgej8uubLEqFqBks',
-        accessToken: 'ya29.Il_AB1MYD5VSKzg7mvqqYbH_IL35ntRLtORlz7wDBAT-ASptdMwrnyxasERG_ShqBiKkpa-h6IU_9WT9CoE4cMG9Wjjs3Dt0Erz51jy_XXZBSFZ4hzDcG0PhkOjqbxMFuA'
+        pass: process.env.PASS
     }
 });
 
 /* GET home page. */
 router.get('/', function (req, res, _next) {
+    let errorMsg = req.query.error;
+
     User.find().exec(function (err, data) {
         if (err)
             return callback(err);
-        return res.render('index', {title: 'User dashboard', data: data});
+        return res.render('index', {title: 'User dashboard', data: data, error: errorMsg});
     });
 });
 
 router.post('/sendMails', function (req, res) {
+    if (!('msg' in req.body))
+        return res.status(400).send("Required param was not passed");
+
     User.find().exec(function (err, data) {
         if (err)
-            return callback(err);
+            return res.status(500).send(err);
         data.forEach(function (item) {
             const mailOptions = {
-                from: 'posvystak1977@gmail.com',
+                from: process.env.EMAIL,
                 to: item['email'],
                 subject: 'Hello from Nastya 3rd lab',
                 text: req.body.msg
