@@ -9,7 +9,7 @@ let mongoose = require('mongoose');
 
 //connect to MongoDB
 mongoose.connect('mongodb://localhost/clientsDatabase', {
-    useNewUrlParser: true, useUnifiedTopology: true
+    useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true
 });
 let db = mongoose.connection;
 

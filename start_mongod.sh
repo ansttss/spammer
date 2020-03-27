@@ -1,0 +1,1 @@
+~/Downloads/mongodb-macos-x86_64-4.2.3/bin/mongod --dbpath data
